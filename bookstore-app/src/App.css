@@ -36,3 +36,33 @@
     transform: rotate(360deg);
   }
 }
+
+/* Apply styles to all input elements */
+input {
+  border-radius: 5px; /* Adjust the radius as needed */
+  padding: 10px; /* Adjust the padding as needed */
+  color: #fff; /* Text color inside the input box */
+  background-color: #282c34; /* Same background color as your app header */
+  border: 2px solid #fff; /* White border */
+}
+
+/* Style the placeholder text */
+input::placeholder {
+  color: #fff; /* White placeholder text */
+  opacity: 1; /* Fully opaque */
+}
+
+/* If you want to apply the same styles to textarea elements */
+textarea {
+  border-radius: 5px; /* Adjust the radius as needed */
+  padding: 10px; /* Adjust the padding as needed */
+  color: #fff; /* Text color inside the textarea */
+  background-color: #282c34; /* Same background color as your app header */
+  border: 2px solid #fff; /* White border */
+}
+
+/* Style the placeholder text in textarea */
+textarea::placeholder {
+  color: #fff; /* White placeholder text */
+  opacity: 1; /* Fully opaque */
+}

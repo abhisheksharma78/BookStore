@@ -1,30 +1,45 @@
+// src/components/Login.js
+
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Container, Box, Typography, TextField, Button, CssBaseline, Avatar } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { TextField, Button, Container, Typography, Box, Alert } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
 
-  const handleLogin = async (event) => {
-    event.preventDefault();
+  const handleLogin = async (e) => {
+    e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/users/login', {
-        username: username,
-        password: password,
+      const response = await axios.post('http://127.0.0.1:5000/users/login', {
+        username,
+        password,
       });
-      console.log(response.data); // Handle the response data
-      // Redirect to another page or save the token
+
+      if (response.status === 200) {
+        const { access_token } = response.data;
+        console.log(access_token)
+        localStorage.setItem('access_token', access_token);
+        setSuccess('Login successful');
+        setError('');
+        navigate('/books');
+      } 
     } catch (error) {
-      console.error('Error logging in:', error);
-      // Handle the error
+      if (error.response && error.response.status === 401) {
+        setError('Invalid username or password');
+      } else {
+        setError('An error occurred. Please try again.');
+      }
+      setSuccess('');
     }
   };
 
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
       <Box
         sx={{
           marginTop: 8,
@@ -33,12 +48,11 @@ const Login = () => {
           alignItems: 'center',
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          <LockOutlinedIcon />
-        </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Login
         </Typography>
+        {error && <Alert severity="error">{error}</Alert>}
+        {success && <Alert severity="success">{success}</Alert>}
         <Box component="form" onSubmit={handleLogin} sx={{ mt: 1 }}>
           <TextField
             margin="normal"
@@ -51,6 +65,12 @@ const Login = () => {
             autoFocus
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            InputProps={{
+              style: { color: '#fff', borderColor: '#fff' },
+            }}
+            InputLabelProps={{
+              style: { color: '#fff' },
+            }}
           />
           <TextField
             margin="normal"
@@ -63,6 +83,12 @@ const Login = () => {
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            InputProps={{
+              style: { color: '#fff', borderColor: '#fff' },
+            }}
+            InputLabelProps={{
+              style: { color: '#fff' },
+            }}
           />
           <Button
             type="submit"
@@ -70,12 +96,12 @@ const Login = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign In
+            Login
           </Button>
         </Box>
       </Box>
     </Container>
   );
-};
+}
 
 export default Login;
